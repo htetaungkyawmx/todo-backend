@@ -1,6 +1,7 @@
 package org.example.todobackend.security;
 
 import lombok.RequiredArgsConstructor;
+import org.example.todobackend.filter.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -19,11 +20,17 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
 @EnableMethodSecurity
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final UserDetailsService userDetailsService;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -77,6 +84,10 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll() 
                 .anyRequest().authenticated());
         http.csrf(c -> c.disable());
+        http.addFilterBefore(jwtAuthenticationFilter,
+                UsernamePasswordAuthenticationFilter.class);
+        http.exceptionHandling(e ->
+                e.authenticationEntryPoint(jwtAuthenticationEntryPoint));
         return http.build();
     }
 }

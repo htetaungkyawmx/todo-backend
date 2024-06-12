@@ -28,11 +28,11 @@ public class TodoBackendApplication {
     @Bean @Transactional @Profile("dev")
     public ApplicationRunner runner(){
         return args -> {
-//            List.of(
-//                    new Todo(null,"To write an essay","In English",false),
-//                    new Todo(null,"To review a historical article","In Burmese",false),
-//                    new Todo(null,"To solve the problem of Maths","Advanced Level",false)
-//            ).forEach(todoRepository::save);
+            List.of(
+                    new Todo(null,"To write an essay","In English",false),
+                    new Todo(null,"To review a historical article","In Burmese",false),
+                    new Todo(null,"To solve the problem of Maths","Advanced Level",false)
+            ).forEach(todoRepository::save);
             User user1 =new User("John Doe","john","john@gmail.com",
                     passwordEncoder.encode("12345"));
             User user2 =new User("Mary","mary","mary@gmail.com",

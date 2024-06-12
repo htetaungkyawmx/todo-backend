@@ -8,6 +8,7 @@ import org.example.todobackend.dto.LoginDto;
 import org.example.todobackend.dto.RegisterDto;
 import org.example.todobackend.entity.User;
 import org.example.todobackend.exception.TodoApiException;
+import org.example.todobackend.provider.JwtTokenProvider;
 import org.example.todobackend.util.EntityUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,6 +26,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
     private final AuthenticationManager authenticationManager;
+    private  final JwtTokenProvider jwtTokenProvider;
     @Transactional
     public String register(RegisterDto registerDto){
         if(userRepository.existsByEmail(registerDto.getEmail())){
@@ -51,7 +53,8 @@ public class AuthService {
                 loginDto.getPassword()
         ));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        return "User login successfully.";
+        String jwt = jwtTokenProvider.generateToken(authentication);
+        return jwt;
     }
 
 }

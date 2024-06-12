@@ -1,6 +1,7 @@
 package org.example.todobackend.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.example.todobackend.dto.JwtResponse;
 import org.example.todobackend.dto.LoginDto;
 import org.example.todobackend.dto.RegisterDto;
 import org.example.todobackend.service.AuthService;
@@ -22,9 +23,12 @@ public class AuthController {
         return new ResponseEntity<>(response,HttpStatus.CREATED);
     }
     @PostMapping("/login")
-    public ResponseEntity<String>
+    public ResponseEntity<JwtResponse>
             login(@RequestBody LoginDto loginDto){
         String response=authService.login(loginDto);
-        return new ResponseEntity<>(response,HttpStatus.OK);
+        System.out.println("Login: " + response);
+        JwtResponse jwtResponse=new JwtResponse();
+        jwtResponse.setAccessToken(response);
+        return new ResponseEntity<>(jwtResponse,HttpStatus.OK);
     }
 }
